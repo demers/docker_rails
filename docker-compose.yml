@@ -7,9 +7,9 @@ services:
     container_name: rails
     volumes:
       - "data_work:/home/ubuntu/work"
-      - "/home/demers/share:/home/ubuntu/share"
     ports:
       - "22:22"
+      - "5901:5901"
       - "3000:3000"
     network_mode: "host"
 

@@ -1,0 +1,48 @@
+
+# https://gorails.com/setup/ubuntu/20.04
+# A COMPLÉTER
+
+ENV RAILS_VERSION 5.2.2
+ENV RUBY_VERSION 2.6.1
+
+#RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+#RUN curl -sSL https://get.rvm.io | bash -s stable
+
+#RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install $RUBY_VERSION"
+#RUN echo "/etc/profile.d/rvm.sh" >> ${WORKDIRECTORY}/.bash_profile
+
+RUN apt -qy install ruby ruby-dev
+
+# Installer nodejs
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
+
+RUN apt-get install -y nodejs
+
+RUN gem update --system
+RUN gem -v
+
+# Install Rails
+RUN gem install rails -v $RAILS_VERSION
+
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN apt -qy install wget ca-certificates
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN apt update
+
+#RUN apt-get -qy install postgresql-common
+#RUN apt-get -qy install postgresql-9.5 libpq-dev #pgadmin4
+
+RUN apt install -qy postgresql postgresql-contrib
+
+EXPOSE 3000
+
+# Création d'un projet Rails de test
+ENV APP_HOME /app
+RUN mkdir $APP_HOME
+
+RUN cd $APP_HOME && \
+    rails new myapp -d postgresql && \
+    find .
+
+RUN cd $APP_HOME/myapp/ && \
+    rake db:create
